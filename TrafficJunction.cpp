@@ -1,20 +1,26 @@
 #include <iostream>
 
 #include "TrafficSignal.cpp"
+#include "TrafficSignalChanger.cpp"
 
 using namespace std;
 
 class TrafficJunction
 {
         private:
-                int number_lanes; //number of lanes in the junction
+                int number_lanes, flag, signaltime; //number of lanes in the junction
                 TrafficSignal *signal[10];//signals for each lane
+                TrafficSignalChanger *compare;
+                ImageProcessing *image;
+                
         
         public:
                 //default constractor
                 TrafficJunction()
                 {
                         number_lanes=4;
+                        compare = new TrafficSignalChanger();
+                        flag=0;
                         this->signal_creation();
                 }
                 
@@ -22,16 +28,22 @@ class TrafficJunction
                 TrafficJunction(int number)
                 {
                         number_lanes=number;
+                        if(number < 4)
+                        {
+                                flag=1;
+                        }
+                        else
+                                flag=0;
+                        compare = new TrafficSignalChanger();
                         this->signal_creation();
                 }
                 
                 //displaying the number of lanes
-                void Display();//line 38
+                void Display();
                 //creating the signals for each lane
-                void signal_creation();//line 43
-                //setting time to the signals and running it in round robin way
-                void set_time();
-                
+                void signal_creation();
+                //getting the histogram value from each lane
+                void gethistovalue();
   
 };
 
@@ -48,17 +60,27 @@ void TrafficJunction::signal_creation()
         }       
 }
 
-void TrafficJunction::set_time()
+
+void TrafficJunction::gethistovalue()
 {
-        for(int i=0;i<number_lanes;i++)
+        while(1)
         {
-                signal[i]->settimer(5);
-                cout << "Running signal: " << i << endl;
-                while(true)
+                for(int i=0;i<number_lanes;i++)
                 {
-                        if(signal[i]->startsignal())
-                                break;
+                        int a,b,c;
+                        a=i;
+                        b=(i+1)%number_lanes;
+                        c=(i+2)%number_lanes;
+                
+                        compare->histovalue[0]=signal[a]->callimage();
+                        compare->histovalue[1]=signal[b]->callimage();
+                        compare->histovalue[2]=signal[c]->callimage();
                         
+                        compare->signalcomparison(i,c);
+                        signaltime = compare->getsignaltime();
+                        cout << "The Signal time is:" << signaltime << endl;
+                        signal[i]->settimer(signaltime);
+                        signal[i]->startsignal();
                 }
-        }
+         }
 }

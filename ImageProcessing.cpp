@@ -31,31 +31,6 @@ class ImageProcessing {
                                 this->medianfilter(0);
                                 this->histogramcomputing(0);
                         }
-                        /*int n;
-                        cout << "The Traffic density menu\n 1. no Traffic\t 2. 50% Traffic\t 3. 75% Traffic\t 4. 100% Traffic\n";
-                        cin >> n;
-                        switch(n)
-                        {
-                                case 1: frame=imread("/home/likith/Desktop/Project/traffic0.png",1);
-                                        break;
-                                case 2: frame=imread("/home/likith/Desktop/Project/traffic50.png",1);
-                                        break;
-                                case 3: frame=imread("/home/likith/Desktop/Project/traffic75.png",1);
-                                        break;
-                                case 4: frame=imread("/home/likith/Desktop/Project/traffic100.png",1);
-                                        break;
-                                default: frame=imread("/home/likith/Desktop/Project/traffic0.png",1);
-                                         break;
-                        }
-                        //frame=imread("/home/likith/Desktop/mmme2.png",1);
-                        if(frame.empty())
-                                cout << "error";
-                        else
-                        {
-                                cvtColor( frame, frame_grey, COLOR_BGR2GRAY );
-                                this->medianfilter(1);
-                                //this->histogramcomputing(1);
-                        }*/
                         
                 }
                 
@@ -78,7 +53,6 @@ class ImageProcessing {
                         {
                                 cvtColor( frame, frame_grey, COLOR_BGR2GRAY );
                                 this->medianfilter(1);
-                                //this->histogramcomputing(1);
                         }
                 }
 
@@ -132,34 +106,7 @@ void ImageProcessing::medianfilter(int flag)
 
 double ImageProcessing::framecapture()
 {
-                        /*int n;
-                        cout << "The Traffic density menu\n 0. no Traffic\t 1. 25% Traffic\t 2. 50% Traffic\t 3. 75% Traffic\t 4. 100% Traffic\n";
-                        cin >> n;
-                        switch(n)
-                        {
-                                case 0: frame=imread("/home/likith/Desktop/Project/traffic0.png",1);
-                                        break;
-                                case 1: frame=imread("/home/likith/Desktop/Project/traffic25.png",1);
-                                        break;
-                                case 2: frame=imread("/home/likith/Desktop/Project/traffic50.png",1);
-                                        break;
-                                case 3: frame=imread("/home/likith/Desktop/Project/traffic75.png",1);
-                                        break;
-                                case 4: frame=imread("/home/likith/Desktop/Project/traffic100.png",1);
-                                        break;
-                                default: frame=imread("/home/likith/Desktop/Project/traffic0.png",1);
-                                         break;
-                        }
-                        //frame=imread("/home/likith/Desktop/mmme2.png",1);
-                        if(frame.empty())
-                                cout << "error";
-                        else
-                        {
-                                cvtColor( frame, frame_grey, COLOR_BGR2GRAY );
-                                this->medianfilter(1);
-                                double value = this->histogramcomputing(1);
-                                return value;
-                        }*/
+                       
                         VideoCapture camera(0);           
                         for(;;)
                         {
@@ -171,12 +118,7 @@ double ImageProcessing::framecapture()
                                                 {
                                                         
                                                         cvtColor( frame, frame_grey, COLOR_BGR2GRAY );
-                                                        /*namedWindow("Current",WINDOW_AUTOSIZE);
-                                                        imshow("edges", frame_grey);
-                                                        waitKey(0);*/
                                                         this->medianfilter(1);
-                                                        //this->histogramcomputing(1);
-                                                        //break;
                                                         imwrite("image.jpg",frame_grey);
                                                         double value = this->histogramcomputing(1);
                                                         return value;
@@ -187,34 +129,22 @@ double ImageProcessing::framecapture()
 
 double ImageProcessing::histogramcomputing(int flag)
 {
-    //int h_bins = 50; int s_bins = 60;
-    //int histSize[] = { h_bins, s_bins };
         int histSize =256;
-
-    // hue varies from 0 to 179, saturation from 0 to 255
-    //float h_ranges[] = { 0, 180 };
-    //float s_ranges[] = { 0, 256 };
         float range[]={0,255};
-//    const float* ranges[] = { h_ranges, s_ranges };
         const float* ranges[] = {range};
-    // Use the o-th and 1-st channels
-    //int channels[] = { 0, 1 };
 
 
     /// Histograms
 
-    /// Calculate the histograms for the HSV images
+    /// Calculate the histograms for the gray images
     if(!flag)
     {
-        //medianBlur(base_grey,base_grey,7);
-        //calcHist( &base_grey, 1, channels, Mat(), hist_base, 2, histSize, ranges, true, false );
         calcHist( &base_grey, 1,0, Mat(), hist_base, 1, &histSize, ranges, true, false );
         normalize( hist_base, hist_base, 0, hist_base.rows, NORM_MINMAX, -1, Mat() );
         printf( "HISTOGRAM COMPUTING IS DONE For Reference image \n" );
     }
     else
     {
-        //medianBlur(frame_grey,frame_grey,7);
         calcHist( &frame_grey, 1,0, Mat(), hist_frame, 1,&histSize, ranges, true, false );
         normalize( hist_base, hist_base, 0,hist_frame.rows, NORM_MINMAX, -1, Mat() );
         printf( "HISTOGRAM COMPUTING IS DONE for current image \n" );

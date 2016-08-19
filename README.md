@@ -1,2 +1,2 @@
 # Traffic-System Controlling using Image Processing
-It uses histogram computation to calculate the traffic density of a perticular lane 
+It calculates the traffic density of a perticular lane and decides upon the time interval between the Red signal and the Green Signal.
